@@ -4,7 +4,7 @@ var pupil_cache = {};
 function make_or_get_pupil(pupilRadius) {
 	if (!pupil_cache[pupilRadius]) {
 		var pupil_canvas = document.createElement("canvas");
-		pupil_canvas.width = pupil_canvas.height = pupilRadius * 2.5;
+		pupil_canvas.width = pupil_canvas.height = Math.max(pupilRadius * 2.5, 1);
 		var pupil_context = pupil_canvas.getContext("2d");
 		pupil_cache[pupilRadius] = pupil_canvas;
 		// Pupil
@@ -83,9 +83,7 @@ function googlyEye(canvasId, posX, posY, relSize)
 	{
 		var r = relDistFromCentre(x, y);
 		drawWhite();
-		if (pupilRadius >= 1) {
-			context.drawImage(pupil_canvas, halfWidth + r*x - pupilRadius, halfWidth + r*y - pupilRadius);
-		}
+		context.drawImage(pupil_canvas, halfWidth + r*x - pupilRadius, halfWidth + r*y - pupilRadius);
 	}
 	return function draw(mousePos){
 		// caching offsetLeft and offsetTop is faster but they might change
