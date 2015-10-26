@@ -1,3 +1,4 @@
+var oldlistener = null
 function setEyes()
 {
 	var eyeParams = [
@@ -332,6 +333,9 @@ function setEyes()
 ["eye_164_1", 95.049, 42.662, 0.912921],
 ["eye_164_2", 96.313, 41.749, 0.912921]
 	];
+
+	pupil_cache = {};
+	white_cache = {};
 	
 	var eyeContainer = document.getElementById("eyesContainer");
 	
@@ -342,9 +346,18 @@ function setEyes()
 		var oldEye = oldEyes[0];
 		oldEye.parentNode.removeChild(oldEye);
 	}
-	for(var ii = 0; ii < eyeParams.length ; ii++)
-	{
-		var eye = eyeParams[ii];
-		googlyEye(eye[0], eye[1], eye[2], eye[3]);
+	var eyes = eyeParams.map(function(par) { return googlyEye.apply(null, par); });
+	if (oldlistener) {
+		window.removeEventListener("mousemove", oldlistener, false);
 	}
+	var req;
+	window.addEventListener("mousemove", oldlistener = function(mousePos){
+		if (req) window.cancelAnimationFrame(req);
+		req = window.requestAnimationFrame(function() {
+			for(var i = 0; i < eyes.length; i++) {
+				eyes[i](mousePos);
+			}
+			req = undefined;
+		});
+	}, false);
 }
