@@ -1,4 +1,3 @@
-var oldlistener = null
 function setEyes()
 {
 	var eyeParams = [
@@ -334,30 +333,15 @@ function setEyes()
 ["eye_164_2", 96.313, 41.749, 0.912921]
 	];
 
-	pupil_cache = {};
-	white_cache = {};
-	
 	var eyeContainer = document.getElementById("eyesContainer");
-	
-	var oldEyes = eyeContainer.getElementsByTagName("canvas");
-	
-	while(oldEyes.length > 0)
-	{
-		var oldEye = oldEyes[0];
-		oldEye.parentNode.removeChild(oldEye);
-	}
-	var eyes = eyeParams.map(function(par) { return googlyEye.apply(null, par); });
-	if (oldlistener) {
-		window.removeEventListener("mousemove", oldlistener, false);
-	}
-	var req;
-	window.addEventListener("mousemove", oldlistener = function(mousePos){
-		if (req) window.cancelAnimationFrame(req);
-		req = window.requestAnimationFrame(function() {
-			for(var i = 0; i < eyes.length; i++) {
-				eyes[i](mousePos);
-			}
-			req = undefined;
-		});
+
+	// hack because the svg isn't always loaded so the clientHeight can be wrong
+	var height = eyeContainer.clientHeight;
+	if (height < eyeContainer.clientWidth * 0.5) height = eyeContainer.clientWidth * 0.6;
+	var p = new GooglyPane(eyeContainer.clientWidth, height, eyeParams, eyeContainer);
+	eyeContainer.style.position = "relative";
+	p.follow_mouse();
+	window.addEventListener("resize", function() {
+		p.resize(eyeContainer.clientWidth, eyeContainer.clientHeight);
 	}, false);
 }

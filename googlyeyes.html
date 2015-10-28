@@ -7,11 +7,14 @@
 		<script src="googlyeyes.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			window.addEventListener("DOMContentLoaded", function(){
-				new googlyEye("eyeHuge", 20, 20, 50);
-				new googlyEye("eyeTopLeft", 0, 0, 30);
-				new googlyEye("eyeTopRight", 100, 0, 10);
-				new googlyEye("eyeBottomLeft", 0, 42, 5);
-				new googlyEye("eyeBottomRight", 50, 50, 2);
+				var p = new GooglyPane(1000, 600, [
+					["eyeHuge", 20, 20, 50],
+					["eyeTopLeft", 0, 0, 30],
+					["eyeTopRight", 100, 0, 10],
+					["eyeBottomLeft", 0, 42, 5],
+					["eyeBottomRight", 50, 50, 2]],
+					document.getElementById("eyesContainer"));
+				p.follow_mouse();
 			}, false);
 		</script>
 	</head>
